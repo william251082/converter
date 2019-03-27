@@ -14,7 +14,7 @@ class JSON
         "success" => true
     ];
 
-    public $data;
+    private $data;
 
     /**
      * JSON constructor.
@@ -26,7 +26,32 @@ class JSON
         $this->data = $data;
     }
 
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
+
     public function convert()
+    {
+        return $this->toJSON();
+    }
+
+    public static function convertData()
+    {
+        return json_encode(self::DATA);
+    }
+
+    public function __toString()
+    {
+        return $this->toJSON();
+    }
+
+    private function toJSON()
     {
         return json_encode(
             array_merge(
@@ -34,10 +59,5 @@ class JSON
                 $this->data
             )
         );
-    }
-
-    public static function convertData()
-    {
-        return json_encode(self::DATA);
     }
 }

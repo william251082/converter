@@ -10,7 +10,7 @@ require __DIR__.'/../vendor/autoload.php';
 
  use App\Format\{JSON,XML,YAML};
 
- print_r("Class fields and Methods\n\n");
+ print_r("Method and Field Visibility\n\n");
 
  $json = new JSON([
      "key" => "value",
@@ -19,13 +19,15 @@ require __DIR__.'/../vendor/autoload.php';
  $xml = new XML();
  $yml = new YAML();
 
-// $json->data = "Some data";
-
-// var_dump($json);
+ var_dump($json);
 // var_dump($xml);
 // var_dump($yml);
 
-//var_dump($json->convert());
-//var_dump(JSON::DATA);
-// static method
-var_dump(JSON::convertData());
+//$json->data = []; // no access to private $data
+var_dump($json->getData());
+//$json->setData([]);
+//var_dump($json->getData());
+
+var_dump($json->convert());
+var_dump((string)$json);
+
