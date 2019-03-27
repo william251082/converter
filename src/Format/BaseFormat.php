@@ -8,7 +8,7 @@
 
 namespace App\Format;
 
-class BaseFormat
+abstract class BaseFormat
 {
     protected $data;
 
@@ -27,10 +27,7 @@ class BaseFormat
         $this->data = $data;
     }
 
-    public function convert()
-    {
-        return "Override me";
-    }
+    public abstract function convert(); // abstract method can't have a body
 
     public function __toString()
     {
