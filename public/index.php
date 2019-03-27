@@ -10,24 +10,23 @@ require __DIR__.'/../vendor/autoload.php';
 
  use App\Format\{JSON,XML,YAML};
 
- print_r("Method and Field Visibility\n\n");
+ print_r("Inheritance\n\n");
 
- $json = new JSON([
-     "key" => "value",
-     "key1" => "value2"
- ]);
- $xml = new XML();
- $yml = new YAML();
+ $data = [
+     "name" => "John",
+     "surname" => "Doe"
+ ];
+
+ $json = new JSON($data);
+ $xml = new XML($data);
+ $yml = new YAML($data);
 
  var_dump($json);
-// var_dump($xml);
-// var_dump($yml);
+ var_dump($xml);
+ var_dump($yml);
 
-//$json->data = []; // no access to private $data
-var_dump($json->getData());
-//$json->setData([]);
-//var_dump($json->getData());
-
+print_r("\n\nResult of conversion\n\n");
 var_dump($json->convert());
-var_dump((string)$json);
+var_dump($xml->convert());
+var_dump($yml->convert());
 
