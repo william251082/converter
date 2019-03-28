@@ -8,9 +8,9 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use App\Format\{BaseFormat, JSON, XML, YAML};
+use App\Format\{FromStringInterface, JSON, NamedFormatInterface, XML, YAML};
 
- print_r("Abstract Classes\n\n");
+ print_r("Interfaces\n\n");
 
  $data = [
      "name" => "John",
@@ -20,16 +20,23 @@ use App\Format\{BaseFormat, JSON, XML, YAML};
  $json = new JSON($data);
  $xml = new XML($data);
  $yml = new YAML($data);
-// $base = new BaseFormat($data); // abstract classes can't be instantiated
 
- var_dump($json);
- var_dump($xml);
- var_dump($yml);
-// var_dump($base);
 
 print_r("\n\nResult of conversion\n\n");
-var_dump($json->convert());
-var_dump($xml->convert());
-var_dump($yml->convert());
-//var_dump($base->convert());
+
+
+$formats = [$json, $xml, $yml];
+
+foreach ($formats as $format) {
+    if ($format instanceof NamedFormatInterface) {
+        var_dump($format->getName());
+    }
+
+    var_dump($format->convert());
+    var_dump($format instanceof FromStringInterface);
+
+    if ($format instanceof FromStringInterface) {
+        var_dump($format->convertFromString('{"name":"John","surname":"Doe"}'));
+    }
+}
 
