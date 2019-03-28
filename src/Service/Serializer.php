@@ -6,7 +6,7 @@
  * Time: 12:32
  */
 
-namespace App;
+namespace App\Service;
 
 use App\Format\FormatInterface;
 
