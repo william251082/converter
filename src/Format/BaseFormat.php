@@ -8,14 +8,9 @@
 
 namespace App\Format;
 
-abstract class BaseFormat
+abstract class BaseFormat implements FormatInterface
 {
     protected $data;
-
-    public function __construct(?string $data = 'hi')
-    {
-        $this->data = $data;
-    }
 
     public function getData()
     {
@@ -27,7 +22,7 @@ abstract class BaseFormat
         $this->data = $data;
     }
 
-    public abstract function convert();
+    public abstract function convert(): string;
 
     public function __toString()
     {
