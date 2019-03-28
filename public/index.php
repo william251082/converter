@@ -8,35 +8,46 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use App\Format\{FromStringInterface, JSON, NamedFormatInterface, XML, YAML};
+use App\Format\{BaseFormat, FromStringInterface, JSON, NamedFormatInterface, XML, YAML};
 
- print_r("Interfaces\n\n");
+ print_r("Typed Argument & Return Types\n\n");
+
+ function convertData(BaseFormat $format) {
+     return $format->convert();
+ }
+
+function getFormatName(NamedFormatInterface $format): string {
+    return $format->getName();
+}
+
+function getFormatByName(array $formats, string $name): ?BaseFormat {
+    foreach ($formats as $format) {
+        if ($format instanceof NamedFormatInterface && $format->getName() === $name) {
+            return $format;
+        }
+    }
+
+    return null;
+}
+
+// void mustn't return a value
+function justDumpData(BaseFormat $format): void {
+     var_dump($format->convert());
+}
 
  $data = [
      "name" => "John",
      "surname" => "Doe"
  ];
 
- $json = new JSON($data);
- $xml = new XML($data);
- $yml = new YAML($data);
+$formats = [
+    new JSON($data),
+    new XML($data),
+    new YAML($data)
+];
+
+var_dump(getFormatByName($formats, 'XML'));
+justDumpData($formats[0]);
 
 
-print_r("\n\nResult of conversion\n\n");
-
-
-$formats = [$json, $xml, $yml];
-
-foreach ($formats as $format) {
-    if ($format instanceof NamedFormatInterface) {
-        var_dump($format->getName());
-    }
-
-    var_dump($format->convert());
-    var_dump($format instanceof FromStringInterface);
-
-    if ($format instanceof FromStringInterface) {
-        var_dump($format->convertFromString('{"name":"John","surname":"Doe"}'));
-    }
-}
 
