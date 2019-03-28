@@ -12,7 +12,7 @@ abstract class BaseFormat
 {
     protected $data;
 
-    public function __construct($data)
+    public function __construct(?string $data = 'hi')
     {
         $this->data = $data;
     }
