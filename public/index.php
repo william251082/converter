@@ -8,32 +8,10 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use App\Format\{BaseFormat, FromStringInterface, JSON, NamedFormatInterface, XML, YAML};
+use App\Format\{BaseFormat, JSON, XML, YAML};
 
- print_r("Typed Argument & Return Types\n\n");
+ print_r("Anonymous Functions\n\n");
 
- function convertData(BaseFormat $format) {
-     return $format->convert();
- }
-
-function getFormatName(NamedFormatInterface $format): string {
-    return $format->getName();
-}
-
-function getFormatByName(array $formats, string $name): ?BaseFormat {
-    foreach ($formats as $format) {
-        if ($format instanceof NamedFormatInterface && $format->getName() === $name) {
-            return $format;
-        }
-    }
-
-    return null;
-}
-
-// void mustn't return a value
-function justDumpData(BaseFormat $format): void {
-     var_dump($format->convert());
-}
 
  $data = [
      "name" => "John",
@@ -46,8 +24,17 @@ $formats = [
     new YAML($data)
 ];
 
-var_dump(getFormatByName($formats, 'XML'));
-justDumpData($formats[0]);
+function findByName(string $name, array $formats): ?BaseFormat {
+    $found = array_filter($formats, function ($format) use ($name) {
+        return $format->getName() === $name;
+    });
 
+    if (count($found)) {
+        return reset($found);
+    }
 
+    return null;
+}
 
+var_dump(findByName('XML', $formats));
+var_dump(findByName('', $formats));
