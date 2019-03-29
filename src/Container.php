@@ -73,13 +73,46 @@ class Container
             $actualDirectory, strpos($actualDirectory, '/') + 1
             );
 
-//        $files = scandir($actualDirectory);
-//        var_dump($files);
-
         $files = array_filter(scandir($actualDirectory), function ($file) {
             return $file !== '.' && $file !== '..';
         });
 
-        var_dump($files);
+        foreach ($files as $file) {
+            $class = new \ReflectionClass(
+                $namespace . '\\' . basename($file, '.php')
+            );
+            $serviceName = $class->getName();
+
+//            var_dump($serviceName);
+
+            $constructor = $class->getConstructor();
+            $arguments = $constructor->getParameters();
+
+            // Parameters to inject into service constructor
+            $serviceParameters = [];
+
+            foreach ($arguments as $argument) {
+                $type = (string)$argument->getType();
+//                var_dump($type);
+
+                if ($this->hasService($type) || $this->hasAlias($type)) {
+                    $serviceParameters[] = $this->getService($type) ?? $this->getAlias($type);
+                } else {
+                    $serviceParameters[] = function () use ($type) {
+                        return $this->getService($type) ?? $this->getAlias($type);
+                    };
+                }
+            }
+
+            $this->addService($serviceName, function () use ($serviceName, $serviceParameters) {
+                foreach ($serviceParameters as &$serviceParameter) {
+                    if ($serviceParameter instanceof \Closure) {
+                        $serviceParameter = $serviceParameter();
+                    }
+                }
+
+                return new $serviceName(...$serviceParameters);
+            });
+        }
     }
 }

@@ -9,11 +9,9 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use App\Container;
-use App\Controller\IndexController;
 use App\Format\{FormatInterface, JSON, XML, YAML};
-use App\Service\Serializer;
 
-print_r("Autowired Service Container I\n\n");
+print_r("Autowired Service Container II\n\n");
 
 
  $data = [
@@ -36,19 +34,24 @@ $container->addService('format.yaml', function() use ($container) {
 });
 
 $container->addService('format', function () use ($container) {
-    return $container->getService('format.xml');
+    return $container->getService('format.json');
 }, FormatInterface::class);
 
-$container->addService('serializer', function () use ($container) {
-    return new Serializer($container->getService('format'));
-});
-
-$container->addService('controller.index', function () use ($container) {
-    return new IndexController($container->getService('serializer'));
-});
+//$container->addService('serializer', function () use ($container) {
+//    return new Serializer($container->getService('format'));
+//});
+//
+//$container->addService('controller.index', function () use ($container) {
+//    return new IndexController($container->getService('serializer'));
+//});
 
 $container->loadServices('App\\Service');
 $container->loadServices('App\\Controller');
 
-//var_dump($container->getServices());
-//var_dump($container->getService('controller.index')->index());
+var_dump($container->getServices());
+var_dump($container
+    ->getService('App\\Controller\\IndexController')
+    ->index());
+var_dump($container
+    ->getService('App\\Controller\\PostController')
+    ->index());
