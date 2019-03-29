@@ -11,6 +11,13 @@ namespace App\Controller;
 use App\Annotations\Route;
 use App\Service\Serializer;
 
+/**
+ * Class IndexController
+ *
+ * @Route(route="/")
+ *
+ * @package App\Controller
+ */
 class IndexController
 {
     /**
